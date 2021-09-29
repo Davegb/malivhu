@@ -1,0 +1,70 @@
+.nav-link-active {
+    font-weight: bold;
+}
+
+.panel {
+    margin: 2px;
+}
+
+.card-body .sub-image {
+    vertical-align: sub;
+}
+
+
+.modal-body { 
+    padding-bottom: 0px;
+}
+
+.row {
+    --bs-gutter-x: 0;
+}
+
+.row>*{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.col-sm .panel > .card .panel{ 
+    margin: 0px
+}
+.button-list  {
+    margin: 5px 7px;
+    margin-left: 16px;
+    text-align: center;
+}
+
+.button-list .btn {
+    margin-right: 5px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0px !important;
+}
+
+.dt-button {
+    color: #fff !important;
+    background: none !important;
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+}
+
+.dataTables_length{
+    float: right;
+    margin-left: 5px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+  }
+
+.dt-body-center {
+    text-align: center;
+}
+
+.radio-list {
+    text-align: center;
+}

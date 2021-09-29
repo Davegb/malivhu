@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block nav-submit %}
+{% load static %}
+
+<a class="nav-link active nav-link-active" href="{% url 'submit' %}">Submit</a>
+<script src="{% static 'vhppi/submit.js' %}"></script> 
+
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    {{ jobid|json_script:"jobid-data" }}
+    <h2>Submit</h2>
+    <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card">
+        <div class="row">
+            <div class="col-sm card panel">
+                <div class="card-header">
+                    I. Input
+                </div>
+                <div class="card-body">
+                    <h5>VIRUS</h5>
+                    <p>Upload a FASTA file: </p>
+                    <input type="file" class="form-control-file" id="fileVirusFasta" name="fileVirusFasta">
+                    <p>Or paste your FASTA sequence &#9;&#9; <span onClick="fillVirus()" class="btn btn-secondary btn-sm pull-right">Load a demo virus FASTA</span></p>
+                    <textarea class="form-control" id="txtVirusFasta" rows="5" name="txtVirusFasta">{{virus}}</textarea>
+                    <br>
+                    <h5>HUMAN</h5>
+                    <p>Upload a FASTA file: </p>
+                    <input type="file" class="form-control-file" id="fileHumanFasta" name="fileHumanFasta" value="{{human}}">
+                    <p>Or paste your FASTA sequence &#9;&#9; <span onClick="fillHuman()" class="btn btn-secondary btn-sm pull-right">Load a demo human FASTA</span></p>
+                    <textarea class="form-control" id="txtHumanFasta" rows="5" name="txtHumanFasta">{{human}}</textarea>
+                </div>
+            </div>
+            <div class="col-sm panel">
+                <div class="card panel">
+                    <div class="card-header">
+                        II. Phases
+                    </div>
+                    <div class="card-body">
+                        <p>Choose the phases to be evaluated
+                            &nbsp;
+                            <img class="sub-image" data-bs-toggle="modal" data-bs-target="#exampleModal" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
+                        </p>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkPhase1" name="chkPhase1" onchange="phase1Changed()" checked>
+                            <label class="custom-control-label" for="chkPhase1">Phase 1 - ssRNA(-) virus vs other proteins</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkPhase2" name="chkPhase2" onchange="phase2Changed()" checked>
+                            <label class="custom-control-label" for="chkPhase2">Phase 2 - Coronavirus vs other ssRNA(-) virus families</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkPhase3" name="chkPhase3" onchange="phase3Changed()" checked>
+                            <label class="custom-control-label" for="chkPhase3">Phase 3 - SARS1, SARS2 and MERS vs other coronaviruses</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkPhase4" name="chkPhase4" onchange="phase4Changed()" checked>
+                            <label class="custom-control-label" for="chkPhase4">Phase 4 - Virus-human protein-protein interaction</label>
+                        </div>
+                        <center>OR</center>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="chkInteraction" name="chkInteraction" onchange="interactionOnly()">
+                            <label class="custom-control-label" for="chkInteraction">Predict virus-human interaction only</label>
+                        </div>
+                        <div class="custom-control custom-checkbox radio-list">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="virus" id="radioCoV1" value="CoV1" disabled>
+                                <label class="form-check-label" for="radioCoV1">SARS CoV1</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="virus" id="radioCoV2" value="CoV2" disabled>
+                                <label class="form-check-label" for="radioCoV2">SARS CoV2</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="virus" id="radioMERS" value="MERS" disabled>
+                                <label class="form-check-label" for="radioMERS">MERS</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="card panel">
+                    <div class="card-header">
+                        III. Submit
+                    </div>
+                    <div class="card-body">
+                        <p>Enter your email address (optional)</p>
+                        <input type="email" class="form-control" id="txtEmail" placeholder="name@example.com" name="txtEmail">
+                    </div>
+                    <div class="button-list">
+                        <button type="button" class="btn btn-secondary" onClick="reset()">Reset</button>
+                        <button type="submit" class="btn btn-primary">Predict</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+    
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">About Prediction Phases</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">  
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Phase 1 - Predicts whether the virus proteins are ssRNA(-) virus proteins or not.</p>
+            <hr>
+            <p>Phase 2 - Predicts whether the virus proteins are Coronaviridae proteins vs other viral proteins.</p>
+            <hr>
+            <p>Phase 3 - Predicts whether the virus proteins are SARS proteins vs MERS proteins vs other Coronaviridae proteins.</p>
+            <hr>
+            <p>Phase 4 - Predicts whether there is interaction between the SARS and MERS viral proteins and the human proteins. You can also skip the first three phases choosing the option "Predict interaction only" and choosing a specific virus.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalSubmission" tabindex="-2" role="dialog" aria-labelledby="modalSubmissionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalSubmissionLabel">Information about your submission</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">  
+            </button>
+        </div>
+        <div class="modal-body">
+            {% autoescape off %}
+                {{jobid}}
+            {% endautoescape %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}
