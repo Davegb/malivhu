@@ -11,7 +11,7 @@ import os
 
 pattern = re.compile('[\W_]+')
 platform = "Windows"
-# platform = "Linux"
+platform = "Linux"
 
 def submit(request):
     jobid = ""
