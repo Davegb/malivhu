@@ -24,6 +24,16 @@
     padding-right: 0px;
 }
 
+.table {
+    border: 1px solid black;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.table > thead > tr {
+
+}
+
 .col-sm .panel > .card .panel{ 
     margin: 0px
 }

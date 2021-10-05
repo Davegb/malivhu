@@ -97,7 +97,7 @@ def submitPhase4(request, jobId):
         p = executeCommand(command)
         if not p.startswith("Submitted"):
             return HttpResponse("There was an error trying to submit your job. Please, try again later or contact us.")
-        return HttpResponse("Your interactions are being predicted. Please, reload the page in a minute.")
+        return HttpResponse("Your interactions are being predicted.")
 
 def results(request, jobId):
     phase1 = ""
@@ -250,8 +250,11 @@ def predictTertiary(request, jobId, protein):
     return render(request, 'vhppi/tertiaryStructure.html', {'structure': "A"})
 
 def secondaryStructure(request, jobId, protein):
-    protein = pattern.sub('', protein)
+    splits = protein.split("_")
+    protein = pattern.sub('', splits[1])
+    protein = splits[0] + "_" + protein
     p = executeCommand("ssh dguevara@biocluster.usu.edu cat ./VirusProteins/webserver/files/" + str(jobId) + "/" + protein + ".horiz")
+    print("ssh dguevara@biocluster.usu.edu cat ./VirusProteins/webserver/files/" + str(jobId) + "/" + protein + ".horiz")
     if(p.strip() == "YES"):
         p = "There is no structure predicted for this protein yet. Check again later!"
     elif(p.strip() == "NO"):

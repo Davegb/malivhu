@@ -39,11 +39,12 @@ function checkHumanFasta() {
         cache: false,
         data: data,
         success: function(data) {
-            if(data !== "Your interactions are being predicted. Please, reload the page in a minute."){
+            if(data !== "Your interactions are being predicted."){
                 alert(data);
                 setTimeout(() => { $('#modalHuman').modal('toggle');}, 300);
             } else {
-                document.getElementById("phase4Info").innerText = data;
+                document.getElementById("btnRunPhase4").style.display = "none";
+                document.getElementById("phase4Info").innerText = data + " You can check your results at " + window.location.href + ".";
                 setTimeout(() => { $('#modalSubmission').modal('toggle');}, 300);
             }
         }, 
@@ -105,7 +106,16 @@ $(document).ready(function() {
     console.log(value);
     var dataSet1 = value;
     if (dataSet1){
+        total = value.length;
+        positive = 0;
+        for (row of value){
+            if(row[1] == "ssRNA(-)") {
+                positive++;
+            }
+        }
         document.getElementById('phase1-tab').style.display = "";
+        document.getElementById("summaryP1").style.display = "";
+        document.getElementById("summaryP1").innerText = positive + " ssRNA(-) sequences found out of " + total + " total sequences.";
     }
 
     while(document.getElementById('phase2-data') === null){
@@ -115,7 +125,16 @@ $(document).ready(function() {
     console.log(value);
     var dataSet2 = value;
     if (dataSet2){
+        total = value.length;
+        positive = 0;
+        for (row of value){
+            if(row[1] == "Coronaviridae") {
+                positive++;
+            }
+        }
         document.getElementById('phase2-tab').style.display = "";
+        document.getElementById("summaryP2").style.display = "";
+        document.getElementById("summaryP2").innerText = positive + " Coronaviridae sequences found out of " + total + " total sequences.";
     } 
 
     while(document.getElementById('phase3-data') === null){
@@ -125,7 +144,19 @@ $(document).ready(function() {
     console.log(value);
     var dataSet3 = value;
     if (dataSet3){
+        total = value.length;
+        sars = 0;
+        mers = 0
+        for (row of value){
+            if(row[1] == "SARS") {
+                sars++;
+            } else if (row[1] == "MERS") { 
+                mers++;
+            }
+        }
         document.getElementById('phase3-tab').style.display = "";
+        document.getElementById("summaryP3").style.display = "";
+        document.getElementById("summaryP3").innerText = sars + " SARS sequences and " + mers + " MERS sequences found out of " + total + " total sequences.";
     } 
 
     while(document.getElementById('phase4-data') === null){
@@ -135,7 +166,16 @@ $(document).ready(function() {
     console.log(value);
     var dataSet4 = value;
     if (dataSet4){
+        total = value.length;
+        positive = 0;
+        for (row of value){
+            if(row[3] == "Yes") {
+                positive++;
+            }
+        }
         document.getElementById('phase4-tab').style.display = "";
+        document.getElementById("summaryP4").style.display = "";
+        document.getElementById("summaryP4").innerText = positive + " positive interactions found out of " + total + " total possible interactions.";
     } 
 
     while(document.getElementById('info1-data') === null){
@@ -203,14 +243,14 @@ $(document).ready(function() {
         ], 
         dom: 'Blfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'print'
         ],
         "columnDefs": [{
             "targets": -1,
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[0].replace(/[^0-9a-z]/gi, '');
                 return "<form action=\"{% url 'predictTertiary/" + protein + "'  %}\" method=\"post\">" + csrf + "<input type=\"hidden\" name=\"hiddenProtein\" value=\"" + protein + "\"><button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary' onClick='this.form.submit(); this.disabled=true; this.value='Predicting...'; predictTertiary('" + protein + "');'>Predict</button></form>"
             },
@@ -219,15 +259,15 @@ $(document).ready(function() {
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
-                protein = row[0].replace(/[^0-9a-z]/gi, '');
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
+                var protein = row[0].replace(/[^0-9a-z]/gi, '');
                 predicting = structures[protein];
                 if(predicting == "NO"){
                     return "<button class='btn btn-primary' onClick='this.disabled=true; this.innerText=\"Predicting...\"; predictSecondary(\"VIRUS_" + protein + "\");'>Predict</button>"
                 } else if (predicting == "YES"){
                     return "<button class='btn btn-primary' disabled>Predicting...</button>"
                 } else if (predicting == "DONE"){
-                    return "<form action=\"" + window.location.href + "/2/" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
+                    return "<form action=\"" + window.location.href + "/2/VIRUS_" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
                 }
             },
         }],
@@ -259,14 +299,14 @@ $(document).ready(function() {
         ], 
         dom: 'Blfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'print'
         ],
         "columnDefs": [{
             "targets": -1,
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[0].replace(/[^0-9a-z]/gi, '');
                 return "<form action=\"{% url 'predictTertiary/" + protein + "'  %}\" method=\"post\">" + csrf + "<input type=\"hidden\" name=\"hiddenProtein\" value=\"" + protein + "\"><button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary' onClick='this.form.submit(); this.disabled=true; this.value='Predicting...'; predictTertiary('" + protein + "');'>Predict</button></form>"
             },
@@ -275,7 +315,7 @@ $(document).ready(function() {
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[0].replace(/[^0-9a-z]/gi, '');
                 predicting = structures[protein];
                 if(predicting == "NO"){
@@ -283,7 +323,7 @@ $(document).ready(function() {
                 } else if (predicting == "YES"){
                     return "<button class='btn btn-primary' disabled>Predicting...</button>"
                 } else if (predicting == "DONE"){
-                    return "<form action=\"" + window.location.href + "/2/" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
+                    return "<form action=\"" + window.location.href + "/2/VIRUS_" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
                 }
             },
         }],
@@ -316,14 +356,14 @@ $(document).ready(function() {
         ], 
         dom: 'Blfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'print'
         ],
         "columnDefs": [{
             "targets": -1,
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[0].replace(/[^0-9a-z]/gi, '');
                 return "<form action=" + jobIds + "'predictTertiary/" + protein + "'\" method=\"post\">" + csrf + "<input type=\"hidden\" name=\"hiddenProtein\" value=\"" + protein + "\"><button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary' onClick='this.form.submit(); this.disabled=true; this.value='Predicting...'; predictTertiary('" + protein + "');'>Predict</button></form>"
             },
@@ -332,7 +372,7 @@ $(document).ready(function() {
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[0].replace(/[^0-9a-z]/gi, '');
                 predicting = structures[protein];
                 if(predicting == "NO"){
@@ -340,7 +380,7 @@ $(document).ready(function() {
                 } else if (predicting == "YES"){
                     return "<button class='btn btn-primary' disabled>Predicting...</button>"
                 } else if (predicting == "DONE"){
-                    return "<form action=\"" + window.location.href + "/2/" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
+                    return "<form action=\"" + window.location.href + "/2/VIRUS_" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
                 }
             },
         }],
@@ -380,14 +420,14 @@ $(document).ready(function() {
         ], 
         dom: 'Blfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'print'
         ],
         "columnDefs": [{
             "targets": -2,
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[0].replace(/[^0-9a-z]/gi, '');
                 predicting = structures[protein];
                 if(predicting == "NO"){
@@ -395,7 +435,7 @@ $(document).ready(function() {
                 } else if (predicting == "YES"){
                     return "<button class='btn btn-primary' disabled>Predicting...</button>"
                 } else if (predicting == "DONE"){
-                    return "<form action=\"" + window.location.href + "/2/" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
+                    return "<form action=\"" + window.location.href + "/2/VIRUS_" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
                 }
             },
         }, {
@@ -403,7 +443,7 @@ $(document).ready(function() {
             "data": null,
             "className": 'dt-body-center',
             "render": function(data, type, row){
-                csrf = document.getElementById('formRunP2').children[0].outerHTML
+                csrf = document.getElementById('formRunP2').children[0].outerHTML;
                 protein = row[2].replace(/[^0-9a-z]/gi, '');
                 predicting = structures[protein];
                 if(predicting == "NO"){
@@ -411,7 +451,7 @@ $(document).ready(function() {
                 } else if (predicting == "YES"){
                     return "<button class='btn btn-primary' disabled>Predicting...</button>"
                 } else if (predicting == "DONE"){
-                    return "<form action=\"" + window.location.href + "/2/" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
+                    return "<form action=\"" + window.location.href + "/2/HUMAN_" + protein + "\" method=\"post\">" + csrf + "<button name=\"protein_" + protein + "\" type=\"submit\" class='btn btn-primary'>View</button></form>"
                 }
             },
         }],

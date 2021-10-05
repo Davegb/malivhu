@@ -46,10 +46,9 @@
     <div class="tab-content" id="myTabContent">
         <br>
         <div class="tab-pane fade show active" id="phase1" role="tabpanel" aria-labelledby="phase1-tab">
-            <p class="h1">Phase 1
-                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase1" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
-            </p>
+            <h5>This phase predicts whether each of the virus proteins provided belong to an ssRNA(-) virus or not.</h5>
             <br>
+            <h6 id="summaryP1" style="display: none"></h6>
             <h3>{% if info1 != "ACTIVE" %}{{info1}}{% endif %}</h3>
             <form id="formRunP2" style="display: none;" action="{% url 'results' jobId %}" method="post">
                 {% csrf_token %}
@@ -60,10 +59,9 @@
             <table id="tabPhase1" class="table" width="100%" style="display: none;"></table>
         </div>
         <div class="tab-pane fade" id="phase2" role="tabpanel" aria-labelledby="phase2-tab">
-            <p class="h1">Phase 2
-                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase2" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
-            </p>
+            <h5>This phase predicts whether each of the ssRNA(-) virus proteins that were predicted in phase 1 are Coronaviridae or not.</h5>
             <br>
+            <h6 id="summaryP2" style="display: none"></h6>
             <h3>{% if info2 != "ACTIVE" %}{{info2}}{% endif %}</h3>
             <form id="formRunP3" style="display: none;" action="{% url 'results' jobId %}" method="post">
                 {% csrf_token %}
@@ -74,10 +72,9 @@
             <table id="tabPhase2" class="table" width="100%"></table>
         </div>
         <div class="tab-pane fade" id="phase3" role="tabpanel" aria-labelledby="phase3-tab">
-            <p class="h1">Phase 3
-                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase3" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
-            </p>
+            <h5>This phase predicts whether each of the Coronaviridae virus proteins that were predicted in phase 2 are SARS, MERS or other species.</h5>
             <br>
+            <h6 id="summaryP3" style="display: none"></h6>
             <h3>{% if info3 != "ACTIVE" %}{{info3}}{% endif %}</h3>
             <button type="submit" name="runP4" id="btnRunPhase4" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalHuman">Click here to run phase 4</button>
             <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase4" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
@@ -85,29 +82,11 @@
             <table id="tabPhase3" class="table" width="100%"></table>
         </div>
         <div class="tab-pane fade" id="phase4" role="tabpanel" aria-labelledby="phase4-tab">
-            <p class="h1">Phase 4
-                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase4" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
-            </p>
+            <h5>This phase predicts whether each of the SARS and MERS virus proteins that were predicted in phase 3 interact with every provided human protein. Since phase 3 only predicts if a protein belongs to a SARS virus, we use BlastP on those proteins to classify them into SARS-CoV1 or SARS-CoV2.</h5>
             <br>
+            <h6 id="summaryP4" style="display: none"></h6>
             <h3>{% if info4 != "ACTIVE" %}{{info4}}{% endif %}</h3>
             <table id="tabPhase4" class="table" width="100%"></table>
-        </div>
-    </div>
-    <div class="modal fade" id="modalPhase1" tabindex="-1" role="dialog" aria-labelledby="modalPhase1Label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalPhase1Label">Phase 1 - ssRNA(-) vs non-ssRNA(-)</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">  
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>This phase predicts whether each of the virus proteins provided belong to an ssRNA(-) virus or not.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-            </div>
         </div>
     </div>
     <div class="modal fade" id="modalPhase2" tabindex="-1" role="dialog" aria-labelledby="modalPhase2Label" aria-hidden="true">
