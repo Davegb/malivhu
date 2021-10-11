@@ -9,15 +9,15 @@
     <body>
         {% block nav %}
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <a class="navbar-brand" href="/vhppi">&nbsp;&nbsp;VHPPI</a>
+            <a class="navbar-brand" href="/vhppi">&nbsp;&nbsp;Malivhu</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">{% block nav-home %}<a class="nav-link" href="{% url 'home' %}">Home</a>{% endblock %}</li>
                     <li class="nav-item">{% block nav-submit %}<a class="nav-link" href="{% url 'submit' %}">Submit</a>{% endblock %}</li>
                     <li class="nav-item">{% block nav-about %}<a class="nav-link" href="{% url 'about' %}">About</a>{% endblock %}</li>
-                    <li class="nav-item">{% block nav-help %}<a class="nav-link" href="{% url 'help' %}">Help</a>{% endblock %}</li>
                 </ul>
             </div>
         </nav>

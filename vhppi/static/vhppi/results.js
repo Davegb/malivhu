@@ -30,6 +30,8 @@ function checkHumanFasta() {
         data.append("file", file);
     });
     data.append("text", textareaText);
+    var email = $('#txtEmail').val();
+    data.append("email", email);
     $.ajax({
         method: 'POST',
         url: window.location.href + "/submitPhase4",
@@ -44,7 +46,8 @@ function checkHumanFasta() {
                 setTimeout(() => { $('#modalHuman').modal('toggle');}, 300);
             } else {
                 document.getElementById("btnRunPhase4").style.display = "none";
-                document.getElementById("phase4Info").innerText = data + " You can check your results at " + window.location.href + ".";
+                document.getElementById("imgRunPhase4").style.display = "none";
+                document.getElementById("phase4Info").innerHTML = data + " You can check your results at <a href='" + window.location.href + "'>" + window.location.href + "</a>.";
                 setTimeout(() => { $('#modalSubmission').modal('toggle');}, 300);
             }
         }, 
@@ -115,6 +118,7 @@ $(document).ready(function() {
         }
         document.getElementById('phase1-tab').style.display = "";
         document.getElementById("summaryP1").style.display = "";
+        document.getElementById("p1tooltip").style.display = "";
         document.getElementById("summaryP1").innerText = positive + " ssRNA(-) sequences found out of " + total + " total sequences.";
     }
 

@@ -132,9 +132,7 @@
             </button>
         </div>
         <div class="modal-body">
-            {% autoescape off %}
-                {{jobid}}
-            {% endautoescape %}
+            Your job has been submitted! Please, click on the following link to check the results. <a href="{{ request.build_absolute_uri }}{{jobid}}" target="_blank">{{ request.build_absolute_uri }}{{jobid}}</a>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

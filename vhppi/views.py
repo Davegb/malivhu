@@ -11,7 +11,7 @@ import os
 
 pattern = re.compile('[\W_]+')
 platform = "Windows"
-platform = "Linux"
+# platform = "Linux"
 
 def submit(request):
     jobid = ""
@@ -73,7 +73,7 @@ def submit(request):
         p = executeCommand(command)
         if not p.startswith("Submitted"):
             return render(request, 'vhppi/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": ""})
-        return render(request, 'vhppi/submit.html', {"jobid": 'Your job has been submitted! Please, check the following link to check the results. <a href="http://127.0.0.1:8000/vhppi/' + jobid + '" target="_blank">http://127.0.0.1:8000/vhppi/' + jobid + "</a>", "virus": "", "human": ""})
+        return render(request, 'vhppi/submit.html', {"jobid": jobid, "virus": "", "human": ""})
     return render(request, 'vhppi/submit.html', {"jobid": "", "virus": "", "human": ""})
 
 def submitPhase4(request, jobId):
@@ -83,6 +83,9 @@ def submitPhase4(request, jobId):
             seqH = f.read().decode('utf-8')
         else:
             seqH = request.POST["text"]
+        email = request.POST["email"]
+        if email == "":
+            email = "EMPTY"
         print(seqH)
         seqsH = toFasta(seqH)
         if len(seqsH) == 0:
@@ -93,7 +96,7 @@ def submitPhase4(request, jobId):
         p = executeCommand("ssh dguevara@biocluster.usu.edu \"echo '" + seqH + "' > VirusProteins/webserver/files/" + str(jobId) + "/human.fasta\"")
         if p != "":
             return HttpResponse("There was an error trying to submit your job. Please, try again later or contact us.")
-        command = "ssh dguevara@biocluster.usu.edu \"cd ~/VirusProteins/webserver && sbatch -J " + str(jobId) + "/predictP4 -o ./files/" + str(jobId) + "/predictP4.out -e ./files/" + str(jobId) + "/predictP4.err --requeue --mem=48000 --nodes=1 --cpus-per-task 1 --ntasks=1 --mail-type=FAIL,BEGIN,END --mail-user=davguev@aggiemail.usu.edu --gres=gpu:tesla:1 --nodelist chela-g01 -t 3-0:00 --partition mahaguru --wrap='module load anaconda3/6_2020.11 ; source /opt/software/anaconda3/2020.11/anaconda/bin/activate tf ; python3 -u predictPhase4.py " + str(jobId) + " > files/" + str(jobId) + "/predictP4.py.out'\""
+        command = "ssh dguevara@biocluster.usu.edu \"cd ~/VirusProteins/webserver && sbatch -J " + str(jobId) + "/predictP4 -o ./files/" + str(jobId) + "/predictP4.out -e ./files/" + str(jobId) + "/predictP4.err --requeue --mem=48000 --nodes=1 --cpus-per-task 1 --ntasks=1 --mail-type=FAIL,BEGIN,END --mail-user=davguev@aggiemail.usu.edu --gres=gpu:tesla:1 --nodelist chela-g01 -t 3-0:00 --partition mahaguru --wrap='module load anaconda3/6_2020.11 ; source /opt/software/anaconda3/2020.11/anaconda/bin/activate tf ; python3 -u predictPhase4.py " + str(jobId) + " " + email + " > files/" + str(jobId) + "/predictP4.py.out'\""
         p = executeCommand(command)
         if not p.startswith("Submitted"):
             return HttpResponse("There was an error trying to submit your job. Please, try again later or contact us.")
@@ -279,8 +282,8 @@ def checkProgress(request, jobId):
 def about(request):
     return render(request, 'vhppi/about.html', {})
 
-def help(request):
-    return render(request, 'vhppi/help.html', {})
+def home(request):
+    return render(request, 'vhppi/home.html', {})
 
 def toFasta(str):
     io = StringIO(str)
