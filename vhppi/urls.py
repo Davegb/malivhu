@@ -12,5 +12,6 @@ urlpatterns = [
     path('<int:jobId>/predict/2', views.predictSecondary, name='predictSecondary'),
     path('<int:jobId>/predict/3', views.predictTertiary, name='predictTertiary'),
     path('<int:jobId>/checkProgress', views.checkProgress, name='checkProgress'),
+    path('checkJob', views.checkJob, name='checkJob'),
     path('<int:jobId>/submitPhase4', views.submitPhase4, name='submitPhase4'),
 ]

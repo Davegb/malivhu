@@ -1,3 +1,5 @@
+var checkInterval = null;
+
 function interactionOnly() {    
     inter = document.getElementById("chkInteraction").checked;
     if(inter){
@@ -171,14 +173,61 @@ function reset() {
     }
 }
 
+function isNumeric(str) {
+    if (typeof str != "string") return false
+    return !isNaN(str) && !isNaN(parseFloat(str)) 
+}
+
 $(document).ready(function() {
     while(document.getElementById('jobid-data') === null){
         //DO NOTHING
     }
-    value = JSON.parse(document.getElementById('jobid-data').text);
-    console.log(value);
-    var jobid = value;
+    jobid = JSON.parse(document.getElementById('jobid-data').text);
     if (jobid !== ""){
-       $("#modalSubmission").modal("toggle");
+        if (isNumeric(jobid)) {
+            $("#modalSubmission").modal("toggle");
+            var checkInterval = setInterval(isJobDone, 10000); 
+        } else {
+            document.getElementById("modalBodySubmission").textContent = jobid;
+            $("#modalSubmission").modal("toggle");
+        }
+    }
+
+    function getCookie(c_name)
+    {
+        if (document.cookie.length > 0)
+        {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1)
+            {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+        return "";
+    }
+
+    function isJobDone() {
+        jobid = JSON.parse(document.getElementById('jobid-data').text);
+        $.ajax({
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
+            url: window.location.href + "checkJob",
+            type: 'POST',
+            data: {
+                jobid,
+            },
+            dataType: 'text',
+            success: function (data) {
+                if (data === "DONE") {
+                    clearInterval(checkInterval);
+                    window.open(window.location.href + jobid, '_blank');
+                }
+            }, 
+            error: function(data) {
+                console.log("ERROR " + JSON.stringify(data));
+            }
+        });
     }
 });

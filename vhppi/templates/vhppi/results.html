@@ -76,8 +76,8 @@
             <br>
             <h6 id="summaryP3" style="display: none"></h6>
             <h3>{% if info3 != "ACTIVE" %}{{info3}}{% endif %}</h3>
-            <button type="submit" name="runP4" id="btnRunPhase4" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalHuman">Click here to run phase 4</button>
-            <img id="imgRunPhase4" class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase4" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
+            <button type="submit" style="display: none" name="runP4" id="btnRunPhase4" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalHuman">Click here to run phase 4</button>
+            <img id="imgRunPhase4" style="display: none" class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase4" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
             <br><br>
             <table id="tabPhase3" class="table" width="100%"></table>
         </div>

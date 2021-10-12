@@ -91,10 +91,9 @@ function predictSecondary(protein){
         cache: false,
         data: protein,
         success: function(data) {
-            console.log(data);
         }, 
         error: function(data) {
-            console.log("NOT SENT");
+            console.log("Secondary structure submission not sent.");
         }
     }).done(function() {
         $( this ).addClass( "done" );
@@ -102,11 +101,10 @@ function predictSecondary(protein){
 }
 $(document).ready(function() {
     document.getElementById('myTabContent').style.display = "";
-    while(document.getElementById('phase1-data') === null){
+    while(document.getElementById('phase1-data') === null && document.getElementById('info1-data') === null){
         //DO NOTHING
     }
     value = JSON.parse(document.getElementById('phase1-data').text);
-    console.log(value);
     var dataSet1 = value;
     if (dataSet1){
         total = value.length;
@@ -119,14 +117,17 @@ $(document).ready(function() {
         document.getElementById('phase1-tab').style.display = "";
         document.getElementById("summaryP1").style.display = "";
         document.getElementById("p1tooltip").style.display = "";
+        document.getElementById('tabPhase1').style.display = "";
         document.getElementById("summaryP1").innerText = positive + " ssRNA(-) sequences found out of " + total + " total sequences.";
-    }
+    } else if (JSON.parse(document.getElementById('info4-data').text) == "Please, try reloading the page in a minute. Your results will be available soon") {
+        document.getElementById('phase1-tab').style.display = "";
+        document.getElementById('tabPhase1').style.display = "";
+    } 
 
-    while(document.getElementById('phase2-data') === null){
+    while(document.getElementById('phase2-data') === null && document.getElementById('info2-data') === null){
         //DO NOTHING
     }
     value = JSON.parse(document.getElementById('phase2-data').text);
-    console.log(value);
     var dataSet2 = value;
     if (dataSet2){
         total = value.length;
@@ -138,14 +139,21 @@ $(document).ready(function() {
         }
         document.getElementById('phase2-tab').style.display = "";
         document.getElementById("summaryP2").style.display = "";
+        document.getElementById('tabPhase2').style.display = "";
         document.getElementById("summaryP2").innerText = positive + " Coronaviridae sequences found out of " + total + " total sequences.";
-    } 
+    } else {
+        if (JSON.parse(document.getElementById('info2-data').text) == "Please, try reloading the page in a minute. Your results will be available soon") {
+            document.getElementById('phase2-tab').style.display = "";
+            document.getElementById('tabPhase2').style.display = "";
+        } else { 
+            document.getElementById("formRunP2").style.display = "";
+        }
+    }
 
-    while(document.getElementById('phase3-data') === null){
+    while(document.getElementById('phase3-data') === null && document.getElementById('info3-data') === null){
         //DO NOTHING
     }
     value = JSON.parse(document.getElementById('phase3-data').text);
-    console.log(value);
     var dataSet3 = value;
     if (dataSet3){
         total = value.length;
@@ -160,14 +168,21 @@ $(document).ready(function() {
         }
         document.getElementById('phase3-tab').style.display = "";
         document.getElementById("summaryP3").style.display = "";
+        document.getElementById('tabPhase3').style.display = "";
         document.getElementById("summaryP3").innerText = sars + " SARS sequences and " + mers + " MERS sequences found out of " + total + " total sequences.";
-    } 
+    } else {
+        if (JSON.parse(document.getElementById('info3-data').text) == "Please, try reloading the page in a minute. Your results will be available soon") {
+            document.getElementById('phase3-tab').style.display = "";
+            document.getElementById('tabPhase3').style.display = "";
+        } else { 
+            document.getElementById("formRunP3").style.display = "";
+        }
+    }
 
-    while(document.getElementById('phase4-data') === null){
+    while(document.getElementById('phase4-data') === null && document.getElementById('info4-data') === null){
         //DO NOTHING
     }
     value = JSON.parse(document.getElementById('phase4-data').text);
-    console.log(value);
     var dataSet4 = value;
     if (dataSet4){
         total = value.length;
@@ -179,49 +194,20 @@ $(document).ready(function() {
         }
         document.getElementById('phase4-tab').style.display = "";
         document.getElementById("summaryP4").style.display = "";
-        document.getElementById("summaryP4").innerText = positive + " positive interactions found out of " + total + " total possible interactions.";
-    } 
-
-    while(document.getElementById('info1-data') === null){
-        //DO NOTHING
-    }
-    value = JSON.parse(document.getElementById('info1-data').text);
-    if (value === ""){
-        document.getElementById('tabPhase1').style.display = "";
-        if (!dataSet2) {
-            document.getElementById("formRunP2").style.display = "";
-        }
-    } 
-
-    while(document.getElementById('info2-data') === null){
-        //DO NOTHING
-    }
-    value = JSON.parse(document.getElementById('info2-data').text);
-    if (value === ""){
-        document.getElementById('tabPhase2').style.display = "";
-        if (!dataSet3) {
-            document.getElementById("formRunP3").style.display = "";
-        }
-    }
-
-    while(document.getElementById('info3-data') === null){
-        //DO NOTHING
-    }
-    value = JSON.parse(document.getElementById('info3-data').text);
-    if (value === ""){
-        document.getElementById('tabPhase3').style.display = "";
-        if (!dataSet4) {
-            document.getElementById("btnRunPhase4").style.display = "";
-        }
-    }
-
-    while(document.getElementById('info4-data') === null){
-        //DO NOTHING
-    }
-    value = JSON.parse(document.getElementById('info4-data').text);
-    if (value === ""){
         document.getElementById('tabPhase4').style.display = "";
+        document.getElementById("summaryP4").innerText = positive + " positive interactions found out of " + total + " total possible interactions.";
+    } else {
+        console.log("INFO " + JSON.parse(document.getElementById('info4-data').text));
+        if (JSON.parse(document.getElementById('info4-data').text) == "Please, try reloading the page in a minute. Your results will be available soon.") {
+            console.log("ENTRA ");
+            document.getElementById('phase4-tab').style.display = "";
+            document.getElementById('tabPhase4').style.display = "";
+        } else { 
+            document.getElementById("btnRunPhase4").style.display = "";
+            document.getElementById("imgRunPhase4").style.display = "";
+        }
     }
+
 
     while(document.getElementById('structures-data') === null){
         //DO NOTHING
@@ -557,7 +543,6 @@ $(document).ready(function() {
                         .rows()
                         .invalidate()
                         .draw();
-                } else{
                 }
             }
         });
