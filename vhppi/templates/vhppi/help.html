@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block nav-home %}
+{% load static %}
+
+<a class="nav-link active nav-link-active" href="{% url 'home' %}">Home</a>
+
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="display-4 text-center">How to use Malivhu?</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center" id="helpIntro">Introduction</h5>
+                <p>
+                    This is a guide to help you use Malivhu from the data input step to the results page, 
+                    explaining each option the tool has to offer using the demo data that is available for everyone,
+                    so that you can replicate the results. If you have any questions that are not covered in this page, 
+                    send an email to david.guevara@usu.edu. 
+                </p>
+                <hr>
+                <h4 class="card-title text-center" id="helpDataInput">Data input</h5>
+                <p>
+                    For all predictions the accepted input must be proteins in FASTA format. You can upload a file or copy 
+                    and paste a text for the virus and human sequences. All sequences must be have at least 31 amino acids.
+                    You can find a button which says "Load a demo virus/human FASTA", which will fill the input boxes
+                    with several protein sequences for virus and human.
+                </p>
+                <hr>
+                <h4 class="card-title text-center" id="helpPhaseSelection">Phase selection</h5>
+                <p>
+                    Malivhu can work in four phases or, if you know what strain do proteins come from, you can choose
+                    to skip the first 3 phases and run only phase 4. For phases 2 and 3, previous phases must be run too.
+                </p>
+                <p>
+                    <b>Phase 1</b> - This phase predicts whether the input sequence is an ssRNA(-) protein or not.
+                </p>
+                <p>
+                    <b>Phase 2</b> - This phase predicts whether the protein comes from a coronavirus or not.
+                </p>
+                <p>
+                    <b>Phase 3</b> - This predicts whether the protein comes from MERS or SARS or other species.
+                </p>
+                <p>
+                    <b>Phase 4</b> - This phase predicts whether both proteins interact or not. If phase 3 was executed, 
+                    it runs a BLAST for all SARS proteins before the prediction to find if they belong to SARS-CoV 
+                    or SARS-CoV-2.
+                </p>
+                <p>
+                    <b>Predict virus-human interaction only</b> - This option runs phase 4 only. You must choose a virus strain
+                    for it to be executed.
+                </p>
+                <hr>
+                <h4 class="card-title text-center" id="helpSubmit">Submit</h5>
+                <p>
+                    The <b>Submit</b> section has a text box where you can type your email, so we tell you whenever your job
+                    is done running. Below you can find a button for resetting the form and the button for submitting
+                    your job. After submitting your job, if you stay in the same page, it will open a new tab with the results
+                    whenever it is done predicting.
+                </p>
+                <hr>
+                <h4 class="card-title text-center" id="helpResults">Results</h5>
+                <p>
+                    For the following examples we submitted our jobs filling them with the "Load a demo virus/human FASTA" button. 
+                    On the top you will find a tab for each one of the executed phases. The selected one will have 
+                    bold text. Below the tabs you will find a short description of what the phase does. 
+                </p>
+                <p>
+                    Above the results table 
+                    you will find 4 buttons for exporting the data: <b>Copy</b> for copying automatically
+                    the results to the clipboard in a tab-separated format; <b>CSV</b> for downloading a file in CSV format; 
+                    <b>Excel</b> for downloading an Excel file with the results; and <b>Print</b> for printing the table.
+                </p>
+                <p>
+                    You can use the Search text box for filtering a specific protein or specific predictions, and also
+                    you can use the Show list to increase the number of entries you want to look at on the same page.
+                </p>
+                <h4>Executing phases 1 and 2 only</h3>
+                <p>
+                    After the description you will find a summary of the results. This will tell you how many sequences
+                    were ssRNA(-) if it is the phase 1 tab, and how many sequences were Coronaviridae if it is the phase 2 tab.
+                    The results table will color the entries according to their results. If it is a positive prediction 
+                    (e.g. if it is an ssRNA(-) or Coronaviridae sequence), it will be green. If not, it will be red. Additionally, 
+                    it will show the highest score in bold text. 
+                </p>
+                <p>
+                    There will also be a button inside each row for you to predict the protein secondary structure. 
+                    If you click <b>Predict</b>, it will start predicting and will change to a <b>View</b> button when it is done. 
+                </p>
+                <p>
+                    When you click the <b>View</b> button, it will open a new tab in your browser that will have the 
+                    secondary structure prediction in PSIPRED format.
+                </p>
+                <p>
+                    If you choose to run only up to phase 1 or 2, you will see a button above the export options that
+                    allows you to run the next phase. In our example, we ran phases 1 and 2, so we can run phase 3.
+                    It will automatically get the results for phase 3 and reload the page, showing the results.
+                </p>
+                <h4>Executing phase 3</h3>
+                <p>
+                    After the description you will find a summary of the results. This will tell you how many sequences
+                    were from SARS and MERS. The results table will color the entries according to their results. If it 
+                    predicts that the protein belongs to SARS, it will be light green, and if it predicts that the protein 
+                    belongs to MERS, it will be dark green. If not, it will be red. Additionally, 
+                    it will show the highest score in bold text.
+                </p>
+                <p>
+                    There will also be a button inside each row for you to predict the protein secondary structure. 
+                    If you click <b>Predict</b>, it will start predicting and will change to a <b>View</b> button when it is done. 
+                </p>
+                <p>
+                    When you click the <b>View</b> button, it will open a new tab in your browser that will have the 
+                    secondary structure prediction in PSIPRED format.
+                </p>
+                <p>
+                    If you choose to run only up to phase 3, you will see a button above the export options that
+                    allows you to run the next phase. When that button is clicked, it will show a new form where
+                    you will be able to input human sequences with a file or a fasta text, or you can also fill
+                    it with the demo data. Here, you can also input your email, so we alert you when it is done
+                    predicting. If you click <b>Close</b>, it will close the form. If you click <b>Run</b>, 
+                    it will start the prediction, and if you stay in the same page, it will open a new tab with the 
+                    results whenever the prediction is done.
+                </p>
+                <h4>Executing up to phase 4</h3>
+                <p>
+                    If you chose to <b>predict virus-human interaction only</b>, you will only see the tab for phase 4.
+                </p>
+                <p>
+                    After the description you will find a summary of the results. This will tell you how many protein pairs
+                    were predicted to interact. The results table will color the entries according to their results. If it 
+                    predicts that the protein pair interacts, it will be green. If not, it will be red. Additionally, 
+                    it will show the highest score in bold text.
+                </p>
+                <p>
+                    There will also be two button inside each row for you to predict the viral or human protein secondary 
+                    structure. If you click <b>Predict</b>, it will start predicting and will change to a <b>View</b> button when it is done. 
+                </p>
+                <p>
+                    When you click the <b>View</b> button, it will open a new tab in your browser that will have the 
+                    secondary structure prediction in PSIPRED format.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

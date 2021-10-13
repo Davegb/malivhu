@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
-platform = "Windows"
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +26,7 @@ SECRET_KEY = 'django-insecure-w-6gcij09(t8%!)bg7cur%d#h1n=*@#gqutq-x9#p5n+leaay-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bioinfo.usu.edu', "127.0.0.1", "localhost"]
-
+ALLOWED_HOSTS = ['bioinfo.usu.edu', "127.0.0.1", "localhost", "129.123.62.7"]
 
 # Application definition
 
@@ -119,7 +117,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 STATIC_URL = '/static/'
 
 # Default primary key field type

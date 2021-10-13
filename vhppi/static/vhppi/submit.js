@@ -1,4 +1,5 @@
 var checkInterval = null;
+var checkInterval4 = null;
 
 function interactionOnly() {    
     inter = document.getElementById("chkInteraction").checked;
@@ -185,10 +186,25 @@ $(document).ready(function() {
     jobid = JSON.parse(document.getElementById('jobid-data').text);
     if (jobid !== ""){
         if (isNumeric(jobid)) {
+            document.getElementById("submitError").style.display = "none";
+            document.getElementById("submitted").style.display = "";
             $("#modalSubmission").modal("toggle");
-            var checkInterval = setInterval(isJobDone, 10000); 
+            chkInteraction = document.getElementById('chkInteraction-data');
+            if(chkInteraction !== null)
+                chkInteraction = JSON.parse(chkInteraction.text);
+            console.log(chkInteraction);
+            if(!chkInteraction)
+            {
+                checkInterval = setInterval(isJobDone, 10000); 
+            }
+            else
+            {
+                checkInterval4 = setInterval(isJobDone4, 10000); 
+            }
         } else {
-            document.getElementById("modalBodySubmission").textContent = jobid;
+            document.getElementById("submitted").style.display = "none";
+            document.getElementById("submitError").textContent = jobid;
+            document.getElementById("submitError").style.display = "";
             $("#modalSubmission").modal("toggle");
         }
     }
@@ -210,10 +226,11 @@ $(document).ready(function() {
     }
 
     function isJobDone() {
+        href = window.location.href;
         jobid = JSON.parse(document.getElementById('jobid-data').text);
         $.ajax({
             headers: { "X-CSRFToken": getCookie("csrftoken") },
-            url: window.location.href + "checkJob",
+            url: href.substring(0, href.lastIndexOf("/")) + "/checkJob",
             type: 'POST',
             data: {
                 jobid,
@@ -221,8 +238,34 @@ $(document).ready(function() {
             dataType: 'text',
             success: function (data) {
                 if (data === "DONE") {
+                    $("#modalSubmission").modal("toggle");
                     clearInterval(checkInterval);
-                    window.open(window.location.href + jobid, '_blank');
+                    window.open(href.substring(0, href.lastIndexOf("/")) + "/" + jobid, '_blank');
+                }
+            }, 
+            error: function(data) {
+                console.log("ERROR " + JSON.stringify(data));
+            }
+        });
+    }
+
+    function isJobDone4() {
+        href = window.location.href;
+        jobid = JSON.parse(document.getElementById('jobid-data').text);
+        $.ajax({
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
+            url: href.substring(0, href.lastIndexOf("/")) + "/checkJob4",
+            type: 'POST',
+            data: {
+                jobid,
+            },
+            dataType: 'text',
+            success: function (data) {
+                console.log(data);
+                if (data === "DONE") {
+                    $("#modalSubmission").modal("toggle");
+                    clearInterval(checkInterval4);
+                    window.open(href.substring(0, href.lastIndexOf("/")) + "/" + jobid, '_blank');
                 }
             }, 
             error: function(data) {

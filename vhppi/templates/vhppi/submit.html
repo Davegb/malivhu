@@ -1,15 +1,18 @@
 {% extends "base.html" %}
-{% block nav-submit %}
 {% load static %}
 
-<a class="nav-link active nav-link-active" href="{% url 'submit' %}">Submit</a>
+{% block header %}
 <script src="{% static 'vhppi/submit.js' %}"></script> 
+{% endblock %}
 
+{% block nav-submit %}
+<a class="nav-link active nav-link-active" href="{% url 'submit' %}">Submit</a>
 {% endblock %}
 
 {% block body %}
 <div class="container">
     {{ jobid|json_script:"jobid-data" }}
+    {{ chkInteraction|json_script:"chkInteraction-data" }}
     <h2>Submit</h2>
     <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -132,9 +135,14 @@
             </button>
         </div>
         <div class="modal-body" id="modalBodySubmission">
-            Your job has been submitted! Please, click on the following link to check the results. <a href="{{ request.build_absolute_uri }}{{jobid}}" target="_blank">{{ request.build_absolute_uri }}{{jobid}}</a>
-            <div id="loadingGif" style="">
-                <img src=src="{% static '/vhppi/images/loadingDNA.gif' %}"></img>
+            <div id="submitted" style="display:none">
+                Your job has been submitted! Please, click on the following link to check the results. <a href="{{ uri }}{{jobid}}" target="_blank">{{ uri }}{{jobid}}</a>
+                <div id="loadingGif">
+                    <img src="{% static '/vhppi/images/loadingDNA.gif' %}"></img>
+                </div>
+            </div>
+            <div id="submitError" style="display:none">
+
             </div>
         </div>
         <div class="modal-footer">

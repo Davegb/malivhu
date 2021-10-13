@@ -128,5 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Docker image
+# Docker 
 malivhu.tar
+
+# Credentials
+*/credentials.py

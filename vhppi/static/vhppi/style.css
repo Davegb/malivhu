@@ -1,5 +1,94 @@
-.nav-link-active {
+.navbar-light {
+    background-color: #316879 !important;
+}
+
+.navbar-brand {
+    color: #f7a985 !important;
     font-weight: bold;
+    font-size: 2rem;
+}
+
+.nav-link {
+    color: #316879;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-size: 1.5rem !important;
+}
+
+.logo {
+    padding-left: 0.5rem;
+    height: 3rem;
+}
+
+.nav-link-active {
+    background-color: #316879 !important;
+    background-color: black;
+    font-weight: bold;
+}
+
+.page-item .page-link {
+    color: #316879 !important;
+}
+
+.page-item.active .page-link {
+    background-color: #316879;
+    border-color: #dee2e6;
+    color: white !important;
+}
+
+
+.card-header {
+    background-color: #316879;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #7fe7dc;
+    border-color: #7fe7dc;
+    color: #3f5453;
+}
+
+.btn-primary:disabled {
+    background-color: #7fe7dc;
+    border-color: #7fe7dc;
+    color: #3f5453;
+}
+
+.dt-button {
+    background: none !important;
+    background-color: #7fe7dc !important;
+    border-color: #7fe7dc !important;
+    color: #3f5453 !important;
+}
+
+.dataTable .btn-primary {
+    border-color: #3f5453;
+}
+
+.btn-secondary {
+    background-color: #ced7d8;
+    border-color: #ced7d8;
+    color: #3f5453;
+}
+
+.modal-header {
+    background-color: #f8b486;
+    color: #304140;
+}
+
+.about {
+    padding-right: 20px !important;
+    margin-bottom: 10px !important;
+}
+
+#workflow { 
+    width: 100%;
 }
 
 .panel {
@@ -10,6 +99,13 @@
     vertical-align: sub;
 }
 
+.card p {
+    font-size: 1.2rem;
+}
+
+#loadingGif {
+    text-align: center;
+}
 
 .modal-body { 
     padding-bottom: 0px;
@@ -30,8 +126,19 @@
     border-top-right-radius: 10px;
 }
 
-.table > thead > tr {
+.table > thead {
+    background-color: #f7a985 ;
+    color:#3f5453;
+}
 
+.page-title {
+    margin-bottom: 0;
+    margin-top: 0;
+    line-height: 70px;
+}
+
+#supertitle{
+    margin-bottom: 0px;
 }
 
 .col-sm .panel > .card .panel{ 
@@ -49,13 +156,6 @@
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     padding: 0px !important;
-}
-
-.dt-button {
-    color: #fff !important;
-    background: none !important;
-    background-color: #0d6efd !important;
-    border-color: #0d6efd !important;
 }
 
 .dataTables_length{

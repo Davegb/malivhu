@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% block nav-about %}
 {% load static %}
 
+{% block header %}
+<script src="{% static 'vhppi/results.js' %}"></script> 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -12,9 +13,10 @@
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
-<script src="{% static 'vhppi/results.js' %}"></script> 
-<a class="nav-link active nav-link-active" href="{% url 'about' %}">About</a>
+{% endblock %}
 
+{% block nav-submit %}
+<a class="nav-link active nav-link-active" href="{% url 'submit' %}">Submit</a>
 {% endblock %}
 
 {% block body %}
@@ -176,7 +178,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="phase4Info"></p>
+                <div id="submitted" style="display:none">
+                    Your interactions are being predicted. You can check your results at <a href="{{ request.build_absolute_uri }}{{jobid}}" target="_blank">{{ request.build_absolute_uri }}{{jobid}}</a>.
+                    <div id="loadingGif">
+                        <img src="{% static '/vhppi/images/loadingDNA.gif' %}"></img>
+                    </div>
+                </div>
+                <div id="submitError" style="display:none">
+
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
