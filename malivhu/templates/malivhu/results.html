@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block header %}
-<script src="{% static 'vhppi/results.js' %}"></script> 
+<script src="{% static 'malivhu/results.js' %}"></script> 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -30,7 +30,7 @@
     {{ info3|json_script:"info3-data" }}
     {{ info4|json_script:"info4-data" }}
     {{ structures|json_script:"structures-data" }}
-    <h2>Results</h2>
+    <h2 class="display-4 text-center">Results</h2>
     <ul class="nav nav-tabs" id="results" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="phase1-tab" data-bs-toggle="tab" data-bs-target="#phase1" type="button" role="tab" aria-controls="phase1" aria-selected="true" style="display: none;">Phase 1</button>
@@ -55,7 +55,7 @@
             <form id="formRunP2" style="display: none;" action="{% url 'results' jobId %}" method="post">
                 {% csrf_token %}
                 <button type="submit" name="runP2" id="btnRunPhase2" class="btn btn-primary">Click here to run phase 2</button>
-                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase2" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
+                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase2" src="{% static '/malivhu/images/info.svg' %}" aria-hidden="true" width=25px>
                 <br><br>
             </form>
             <table id="tabPhase1" class="table" width="100%" style="display: none;"></table>
@@ -68,7 +68,7 @@
             <form id="formRunP3" style="display: none;" action="{% url 'results' jobId %}" method="post">
                 {% csrf_token %}
                 <button type="submit" name="runP3" id="btnRunPhase3" class="btn btn-primary">Click here to run phase 3</button>
-                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase3" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
+                <img class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase3" src="{% static '/malivhu/images/info.svg' %}" aria-hidden="true" width=25px>
                 <br><br>
             </form>
             <table id="tabPhase2" class="table" width="100%"></table>
@@ -79,7 +79,7 @@
             <h6 id="summaryP3" style="display: none"></h6>
             <h3>{% if info3 != "ACTIVE" %}{{info3}}{% endif %}</h3>
             <button type="submit" style="display: none" name="runP4" id="btnRunPhase4" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalHuman">Click here to run phase 4</button>
-            <img id="imgRunPhase4" style="display: none" class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase4" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
+            <img id="imgRunPhase4" style="display: none" class="sub-image" data-bs-toggle="modal" data-bs-target="#modalPhase4" src="{% static '/malivhu/images/info.svg' %}" aria-hidden="true" width=25px>
             <br><br>
             <table id="tabPhase3" class="table" width="100%"></table>
         </div>
@@ -150,7 +150,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">  
                     </button>
                 </div>
-                <form id="formPhase4" action="/vhppi/{{jobId}}/submitPhase4" method="post" enctype="multipart/form-data">
+                <form id="formPhase4" action="/malivhu/{{jobId}}/submitPhase4" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
                         <p>Upload a FASTA file: </p>
@@ -181,7 +181,7 @@
                 <div id="submitted" style="display:none">
                     Your interactions are being predicted. You can check your results at <a href="{{ request.build_absolute_uri }}{{jobid}}" target="_blank">{{ request.build_absolute_uri }}{{jobid}}</a>.
                     <div id="loadingGif">
-                        <img src="{% static '/vhppi/images/loadingDNA.gif' %}"></img>
+                        <img src="{% static '/malivhu/images/loadingDNA.gif' %}"></img>
                     </div>
                 </div>
                 <div id="submitError" style="display:none">

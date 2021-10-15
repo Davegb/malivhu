@@ -6,17 +6,18 @@
 
 {% endblock %}
 {% block body %}
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">Malivhu</h1>
+        <h4>Malivhu: <b>MA</b>chine <b>L</b>earn<b>I</b>ng for <b>V</b>irus classification and virus-<b>HU</b>man interaction prediction</h4>
+        <hr>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Submit your job here »</a></p>
+    </div>
+</div>
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
-            <h3 class="display-4 text-center" id="supertitle">Malivhu</h4>
-            <h3 class="page-title text-center">Malivhu: <b>MA</b>chine <b>L</b>earn<b>I</b>ng for <b>V</b>irus classification and virus-<b>HU</b>man interaction prediction</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-center">About Malivhu</h5>
+        <div class="about">
+            <h4 class="card-title text-center">About Malivhu</h5>
                 <p>
                     The outbreak of disease-causing agents is continuously threatening
                     public health worldwide, particularly the viruses. Millions of people die due to the effects
@@ -46,18 +47,14 @@
                     Malivhu lets the user input two protein sequences: the virus and the host proteins. In the background, 
                     it works in four phases: (I) it predicts whether the input sequence is an ssRNA(-) protein or not; 
                     (II) it predicts whether the protein comes from a coronavirus or not; (III) it predicts whether the protein
-                    comes from MERS or SARS; and (IV) runs a BLAST for all SARS proteins to find if they belong to
-                    SARS-CoV or SARS-CoV-2, and then it predicts whether both proteins interact or not.
+                    comes from MERS or SARS or other species; and (IV) runs a BLAST for all SARS proteins to find if they 
+                    belong to SARS-CoV or SARS-CoV-2, and then it predicts whether both proteins interact or not.
                 </p>
-            </div>
-            
-            <div class="card-body text-center">
-                <h4 class="card-title">Malivhu's Workflow</h5>
+                    
+                <h4 class="card-title text-center">Malivhu's Workflow</h5>
                 <br>
-                <img id="workflow" src="{% static '/vhppi/images/malivhuWorkflow.png' %}">
-            </div>
+                <img id="workflow" src="{% static '/malivhu/images/malivhuWorkflow.png' %}">
         </div>
-        <hr>
     </div>
 </div>
 {% endblock %}

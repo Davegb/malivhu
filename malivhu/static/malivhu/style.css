@@ -48,6 +48,12 @@
     color: white;
 }
 
+.bg-primary {
+    background-color: #316879 !important;
+    width: 30%;
+    text-align: center;
+}
+
 .btn-primary {
     background-color: #7fe7dc;
     border-color: #7fe7dc;
@@ -84,11 +90,51 @@
 
 .about {
     padding-right: 20px !important;
-    margin-bottom: 10px !important;
+    padding-bottom: 30px !important;
+}
+
+footer.page-footer {
+    bottom: 0;
+    color: #fff;
+    background-color: #316879;
+    text-align: center;
+    font-size: 1.2em;
+    padding-bottom: 2%;
+}
+
+footer > a {
+    color: white;
+}
+
+footer > a:hover {
+    color: #f8b486;
+}
+
+.footerWhitespace {
+    padding-bottom: 2%;
+    font-size: 1.2em;
+}
+
+.jumbotron {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: .3rem;
 }
 
 #workflow { 
     width: 100%;
+}
+
+.nav-link[data-bs-toggle].collapsed:after {
+    content: " ▾";
+}
+.nav-link[data-bs-toggle]:not(.collapsed):after {
+    content: " ▴";
+}
+
+.nav-link-selected { 
+    font-weight: bold;
 }
 
 .panel {

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+<script src="{% static 'malivhu/ngl.js' %}"></script>
+<script src="{% static 'malivhu/tertiaryStructure.js' %}"></script> 
+{% endblock %}
+
+{% block nav-submit %}
+<a class="nav-link active nav-link-active" href="{% url 'submit' %}">Submit</a>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    {{ structure|json_script:"structure-data" }}
+    {{ name|json_script:"name-data" }}
+    <div class="container-fluid">
+        <h2 class="display-4 text-center">Tertiary structure</h2>
+        <div class="row">
+            <div class="col-2 collapse show d-md-flex bg-light pt-2 pl-0" id="sidebar">
+                <ul class="nav flex-column flex-nowrap overflow-hidden">
+                    <li class="nav-item">
+                        <a class="nav-link collapsed text-truncate" href="#submenuPoly" data-bs-toggle="collapse" data-bs-target="#submenuPoly"><i class="fa fa-table"></i> <span class="d-none d-sm-inline">Representations</span></a>
+                        <div class="collapse" id="submenuPoly" aria-expanded="false">
+                            <ul class="flex-column ps-2 nav">
+                                <li class="nav-item"><a class="nav-link py-0 nav-link-selected" id="cartoon" onClick="changeRepresentation(this.id, '')" href="#"><span>Cartoon</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="tube" onClick="changeRepresentation(this.id, '')" href="#"><span>Tube</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="trace" onClick="changeRepresentation(this.id, '')" href="#"><span>Trace</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="line" onClick="changeRepresentation(this.id, '')" href="#"><span>Lines</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ball+stick" onClick="changeRepresentation(this.id, '')" href="#"><span>Ball+Stick</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="hyperball" onClick="changeRepresentation(this.id, '')" href="#"><span>Hyperball</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="licorice" onClick="changeRepresentation(this.id, '')" href="#"><span>Licorice</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="rope" onClick="changeRepresentation(this.id, '')" href="#"><span>Rope</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="surface" onClick="changeRepresentation(this.id, '')" href="#"><span>Surface</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="spacefill" onClick="changeRepresentation(this.id, '')" href="#"><span>Spacefill</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed text-truncate" href="#submenuColorPoly" data-bs-toggle="collapse" data-bs-target="#submenuColorPoly"><i class="fa fa-table"></i> <span class="d-none d-sm-inline">Color scheme</span></a>
+                        <div class="collapse" id="submenuColorPoly" aria-expanded="false">
+                            <ul class="flex-column ps-2 nav" id="listColorSchemes">
+                                <li class="nav-item"><a class="nav-link py-0" id="atomindex" onClick="changeColorScheme(this.id, '')" href="#"><span>Atom index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="bfactor" onClick="changeColorScheme(this.id, '')" href="#"><span>Bfactor</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="chainid" onClick="changeColorScheme(this.id, '')" href="#"><span>Chain ID</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="chainindex" onClick="changeColorScheme(this.id, '')" href="#"><span>Chain index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="densityfit" onClick="changeColorScheme(this.id, '')" href="#"><span>Density fit</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="electrostatic" onClick="changeColorScheme(this.id, '')" href="#"><span>Electrostatic</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="element" onClick="changeColorScheme(this.id, '')" href="#"><span>Element</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="entityindex" onClick="changeColorScheme(this.id, '')" href="#"><span>Entity index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="entitytype" onClick="changeColorScheme(this.id, '')" href="#"><span>Entity type</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="geoquality" onClick="changeColorScheme(this.id, '')" href="#"><span>Geoquality</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="hidrophobicity" onClick="changeColorScheme(this.id, '')" href="#"><span>Hydrophobicity</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="modelindex" onClick="changeColorScheme(this.id, '')" href="#"><span>Model index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="moleculetype" onClick="changeColorScheme(this.id, '')" href="#"><span>Molecule type</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="occupancy" onClick="changeColorScheme(this.id, '')" href="#"><span>Occupancy</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="random" onClick="changeColorScheme(this.id, '')" href="#"><span>Random</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0 nav-link-selected" id="residueindex" onClick="changeColorScheme(this.id, '')" href="#"><span>Residue index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="resname" onClick="changeColorScheme(this.id, '')" href="#"><span>Residue name</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="sstruc" onClick="changeColorScheme(this.id, '')" href="#"><span>Secondary structure</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="uniform" onClick="changeColorScheme(this.id, '')" href="#"><span>Uniform</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="value" onClick="changeColorScheme(this.id, '')" href="#"><span>Value</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="volume" onClick="changeColorScheme(this.id, '')" href="#"><span>Volume</span></a></li>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="display: none">
+                        <a class="nav-link collapsed text-truncate" href="#submenuLigand" data-bs-toggle="collapse" data-bs-target="#submenuLigand"><i class="fa fa-table"></i> <span class="d-none d-sm-inline">Ligand representations</span></a>
+                        <div class="collapse" id="submenuLigand" aria-expanded="false">
+                            <ul class="flex-column ps-2 nav">
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandline" onClick="changeRepresentation(this.id, 'ligand')" href="#"><span>Lines</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0 nav-link-selected" id="ligandball+stick" onClick="changeRepresentation(this.id, 'ligand')" href="#"><span>Ball+Stick</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandhyperball" onClick="changeRepresentation(this.id, 'ligand')" href="#"><span>Hyperball</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandlicorice" onClick="changeRepresentation(this.id, 'ligand')" href="#"><span>Licorice</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandsurface" onClick="changeRepresentation(this.id, 'ligand')" href="#"><span>Surface</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandspacefill" onClick="changeRepresentation(this.id, 'ligand')" href="#"><span>Spacefill</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="display: none">
+                        <a class="nav-link collapsed text-truncate" href="#submenuColorLigand" data-bs-toggle="collapse" data-bs-target="#submenuColorLigand"><i class="fa fa-table"></i> <span class="d-none d-sm-inline">Ligand color scheme</span></a>
+                        <div class="collapse" id="submenuColorLigand" aria-expanded="false">
+                            <ul class="flex-column ps-2 nav" id="listColorSchemesLigand">
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandatomindex" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Atom index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandbfactor" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Bfactor</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandchainid" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Chain ID</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandchainindex" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Chain index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="liganddensityfit" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Density fit</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandelectrostatic" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Electrostatic</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandelement" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Element</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandentityindex" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Entity index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandentitytype" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Entity type</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandgeoquality" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Geoquality</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandhidrophobicity" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Hydrophobicity</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandmodelindex" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Model index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandmoleculetype" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Molecule type</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandoccupancy" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Occupancy</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandrandom" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Random</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0 nav-link-selected" id="ligandresidueindex" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Residue index</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandresname" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Residue name</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandsstruc" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Secondary structure</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="liganduniform" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Uniform</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandvalue" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Value</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-0" id="ligandvolume" onClick="changeColorScheme(this.id, 'ligand')" href="#"><span>Volume</span></a></li>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div id="ngl" class="mx-auto col-10" style="height:600px;">
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-10 text-center">
+                    <br>
+                    <button class="btn btn-primary">Download PDB</button>&nbsp;&nbsp;
+                    <button class="btn btn-primary" onClick="makeImage()">Download image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from Bio import SeqIO
 from io import StringIO
-from vhppi.credentials import *
+from malivhu.credentials import *
 import re, string
 import subprocess
 import os
@@ -36,7 +36,7 @@ def submit(request):
             virusFile = False
             seqV = request.POST["txtVirusFasta"]
         if pInteraction and predictVirus == "None":
-            return render(request, 'vhppi/submit.html', {"jobid": "You must select the virus strain when running phase 4 only.", "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "You must select the virus strain when running phase 4 only.", "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
         if p4 or predictVirus != "None":
             if request.FILES.get('fileHumanFasta', False):
                 f = request.FILES['fileHumanFasta']
@@ -46,42 +46,42 @@ def submit(request):
                 seqH = request.POST["txtHumanFasta"]
         seqsV = _toFasta(seqV)
         if len(seqsV) == 0:
-            return render(request, 'vhppi/submit.html', {"jobid": "The virus sequence is not in FASTA format.", "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "The virus sequence is not in FASTA format.", "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
         shortSeqs = _checkLength(seqsV)
         if len(shortSeqs) > 0:
-            return render(request, 'vhppi/submit.html', {"jobid": "The following virus sequences are shorter than 31 accepted characters: " + ",".join(shortSeqs), "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "The following virus sequences are shorter than 31 accepted characters: " + ",".join(shortSeqs), "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
         if p4 or predictVirus != "None":
             seqsH = _toFasta(seqH)
             if len(seqsH) == 0:
-                return render(request, 'vhppi/submit.html', {"jobid": "The human sequence is not in FASTA format.", "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
+                return render(request, 'malivhu/submit.html', {"jobid": "The human sequence is not in FASTA format.", "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
             shortSeqs = _checkLength(seqsH)
             if len(shortSeqs) > 0:
-                return render(request, 'vhppi/submit.html', {"jobid": "The following human sequences are shorter than 31 accepted characters: " + ",".join(shortSeqs), "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
+                return render(request, 'malivhu/submit.html', {"jobid": "The following human sequences are shorter than 31 accepted characters: " + ",".join(shortSeqs), "virus": "" if virusFile else seqV, "human": "" if humanFile else seqH, "uri": "", "chkInteraction": ""})
 
         command = "sbatch -J job -o job.out -e job.err --cpus-per-task 1 --ntasks 1 -t 7-0:00 --mem=2000 --partition guru --wrap=''"
         p = _executeCommand(command)
         if p.startswith("Submitted"):
             jobid = p.split()[3]
         else:
-            return render(request, 'vhppi/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
         
         p = _executeCommand("mkdir VirusProteins/webserver/files/" + jobid + "")
         if p != "":
-            return render(request, 'vhppi/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
         p = _executeCommand("echo '" + seqV + "' > VirusProteins/webserver/files/" + jobid + "/virus.fasta")
         if p != "":
-            return render(request, 'vhppi/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
         if p4 or predictVirus != "None":
             p = _executeCommand("echo '" + seqH + "' > VirusProteins/webserver/files/" + jobid + "/human.fasta")
             if p != "":
-                return render(request, 'vhppi/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
+                return render(request, 'malivhu/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
 
         command = "cd ~/VirusProteins/webserver && sbatch -J " + jobid + "/predict -o ./files/" + jobid + "/predict.out -e ./files/" + jobid + "/predict.err --requeue --mem=48000 --nodes=1 --cpus-per-task 1 --ntasks=1 --mail-type=FAIL,BEGIN,END --mail-user=davguev@aggiemail.usu.edu --gres=gpu:tesla:1 --nodelist chela-g01 -t 3-0:00 --partition mahaguru --wrap='module load anaconda3/6_2020.11 ; source /opt/software/anaconda3/2020.11/anaconda/bin/activate tf ; python3 -u predictWeb.py " + str(p1) + " " + str(p2) + " " + str(p3) + " " + str(p4) + " " + predictVirus + " " + jobid + " " + email + " > files/" + jobid + "/predict.py.out'"
         p = _executeCommand(command)
         if not p.startswith("Submitted"):
-            return render(request, 'vhppi/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
-        return render(request, 'vhppi/submit.html', {"jobid": jobid, "virus": "", "human": "", "uri": request.build_absolute_uri("/vhppi/"), "chkInteraction": pInteraction})
-    return render(request, 'vhppi/submit.html', {"jobid": "", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
+            return render(request, 'malivhu/submit.html', {"jobid": "There was an error trying to submit your job. Please, try again later or contact us.", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
+        return render(request, 'malivhu/submit.html', {"jobid": jobid, "virus": "", "human": "", "uri": request.build_absolute_uri("/malivhu/"), "chkInteraction": pInteraction})
+    return render(request, 'malivhu/submit.html', {"jobid": "", "virus": "", "human": "", "uri": "", "chkInteraction": ""})
 
 def submitPhase4(request, jobId):
     if request.method =='POST':
@@ -121,21 +121,21 @@ def results(request, jobId):
         p = _executeCommand("echo \"DONE\" > ./VirusProteins/webserver/files/" + str(jobId) + "/predictP2.out ")
         if p != "":
             info2 = "There was an error trying to run phase 2."
-            return render(request, 'vhppi/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
+            return render(request, 'malivhu/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
                 'info1': info1, 'info2': info2, 'info3': info3, 'info4': info4})
         info2 = "ACTIVE"
     elif "runP3" in request.POST:
         p = _executeCommand("echo \"DONE\" > ./VirusProteins/webserver/files/" + str(jobId) + "/predictP3.out ")
         if p != "":
             info3 = "There was an error trying to run phase 3."
-            return render(request, 'vhppi/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
+            return render(request, 'malivhu/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
                 'info1': info1, 'info2': info2, 'info3': info3, 'info4': info4})
         info3 = "ACTIVE"
     elif "runP4" in request.POST:
         p = _executeCommand("echo \"DONE\" > ./VirusProteins/webserver/files/" + str(jobId) + "/predictP4.out")
         if p != "":
             info4 = "There was an error trying to run phase 4."
-            return render(request, 'vhppi/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
+            return render(request, 'malivhu/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
                 'info1': info1, 'info2': info2, 'info3': info3, 'info4': info4})
         info4 = "ACTIVE"
 
@@ -244,7 +244,7 @@ def results(request, jobId):
             proteinData2.append(str(round(pos, 2)) + "%")
             proteinData2.append(str(round(neg, 2)) + "%") 
             phase4.append(proteinData2)
-    return render(request, 'vhppi/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
+    return render(request, 'malivhu/results.html', {"jobId": jobId, 'phase1': phase1, 'phase2': phase2, 'phase3': phase3, 'phase4': phase4,   
                 'info1': info1, 'info2': info2, 'info3': info3, 'info4': info4, "structures": structures})
 
 def predictSecondary(request, jobId):
@@ -256,7 +256,7 @@ def predictSecondary(request, jobId):
     return HttpResponse("")
 
 def predictTertiary(request, jobId, protein):
-    return render(request, 'vhppi/tertiaryStructure.html', {'structure': "A"})
+    return render(request, 'malivhu/tertiaryStructure.html', {'structure': "A"})
 
 def secondaryStructure(request, jobId, protein):
     splits = protein.split("_")
@@ -269,16 +269,19 @@ def secondaryStructure(request, jobId, protein):
         p = "Sorry! That protein is not listed in your submission."
     elif(p.strip() == ""):
         p = "Sorry! There was an error trying to find your protein."
-    return render(request, 'vhppi/secondaryStructure.html', {'structure': p})
+    return render(request, 'malivhu/secondaryStructure.html', {'structure': p})
 
 def tertiaryStructure(request, jobId, protein):
-    protein = pattern.sub('', protein)
-    p = _executeCommand("cat ~/VirusProteins/webserver/files/" + str(jobId) + "/" + protein + ".horiz")
+    splits = protein.split("_")
+    protein = pattern.sub('', splits[1])
+    protein = splits[0] + "_" + protein
+    protein = "3kvh"
+    p = _executeCommand("cat ~/VirusProteins/webserver/files/" + str(jobId) + "/" + protein + ".pdb")
     if(p.strip() == "YES"):
         p = "There is no structure predicted for this protein yet. Check again later!"
     elif(p.strip() == ""):
         p = "Sorry! That protein is not listed in your submission."
-    return render(request, 'vhppi/tertiaryStructure.html', {'structure': p})
+    return render(request, 'malivhu/tertiaryStructure.html', {'structure': p, "name": protein})
 
 def checkProgress(request, jobId):
     p = _executeCommand("cat ~/VirusProteins/webserver/files/" + str(jobId) + "/virusPsipred.out ; FILE=~/VirusProteins/webserver/files/" + str(jobId) + "/humanPsipred.out ; [ -f \"$FILE\" ] && cat \"$FILE\" || : ;")
@@ -304,10 +307,10 @@ def checkJob4(request):
             return HttpResponse("NOT DONE")
 
 def help(request):
-    return render(request, 'vhppi/help.html', {})
+    return render(request, 'malivhu/help.html', {})
 
 def home(request):
-    return render(request, 'vhppi/home.html', {})
+    return render(request, 'malivhu/home.html', {})
 
 def _toFasta(str):
     io = StringIO(str)

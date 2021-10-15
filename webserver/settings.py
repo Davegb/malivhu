@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['bioinfo.usu.edu', "127.0.0.1", "localhost", "129.123.62.7"]
 # Application definition
 
 INSTALLED_APPS = [
-    'vhppi.apps.VhppiConfig',
+    'malivhu.apps.MalivhuConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

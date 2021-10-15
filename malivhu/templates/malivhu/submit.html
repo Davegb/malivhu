@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block header %}
-<script src="{% static 'vhppi/submit.js' %}"></script> 
+<script src="{% static 'malivhu/submit.js' %}"></script> 
 {% endblock %}
 
 {% block nav-submit %}
@@ -13,15 +13,13 @@
 <div class="container">
     {{ jobid|json_script:"jobid-data" }}
     {{ chkInteraction|json_script:"chkInteraction-data" }}
-    <h2>Submit</h2>
+    <h2 class="display-4 text-center">Submit</h2>
     <form action="{% url 'submit' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="card">
         <div class="row">
             <div class="col-sm card panel">
-                <div class="card-header">
-                    I. Input
-                </div>
+                <span class="h4 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">I. Input</span>
                 <div class="card-body">
                     <h5>VIRUS</h5>
                     <p>Upload a FASTA file: </p>
@@ -38,13 +36,11 @@
             </div>
             <div class="col-sm panel">
                 <div class="card panel">
-                    <div class="card-header">
-                        II. Phases
-                    </div>
+                    <span class="h4 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">II. Phases</span>
                     <div class="card-body">
                         <p>Choose the phases to be evaluated
                             &nbsp;
-                            <img class="sub-image" data-bs-toggle="modal" data-bs-target="#exampleModal" src="{% static '/vhppi/images/info.svg' %}" aria-hidden="true" width=25px>
+                            <img class="sub-image" data-bs-toggle="modal" data-bs-target="#exampleModal" src="{% static '/malivhu/images/info.svg' %}" aria-hidden="true" width=25px>
                         </p>
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="chkPhase1" name="chkPhase1" onchange="phase1Changed()" checked>
@@ -85,9 +81,7 @@
                 </div>
                 <br>
                 <div class="card panel">
-                    <div class="card-header">
-                        III. Submit
-                    </div>
+                    <span class="h4 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">III. Submit</span>
                     <div class="card-body">
                         <p>Enter your email address (optional)</p>
                         <input type="email" class="form-control" id="txtEmail" placeholder="name@example.com" name="txtEmail">
@@ -138,7 +132,7 @@
             <div id="submitted" style="display:none">
                 Your job has been submitted! Please, click on the following link to check the results. <a href="{{ uri }}{{jobid}}" target="_blank">{{ uri }}{{jobid}}</a>
                 <div id="loadingGif">
-                    <img src="{% static '/vhppi/images/loadingDNA.gif' %}"></img>
+                    <img src="{% static '/malivhu/images/loadingDNA.gif' %}"></img>
                 </div>
             </div>
             <div id="submitError" style="display:none">

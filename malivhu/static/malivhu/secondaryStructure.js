@@ -4,6 +4,5 @@ $(document).ready(function() {
         console.log("AA");
     }
     value = JSON.parse(document.getElementById('structure-data').text);
-    console.log(value);
     document.getElementById("PSIPRED").innerText = value;
 } );
